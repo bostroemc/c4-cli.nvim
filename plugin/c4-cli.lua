@@ -1,0 +1,16 @@
+-- if vim.g.loaded_c4_cli_nvim then
+-- 	return
+-- end
+-- vim.g.loaded_c4_cli_nvim = true
+--
+-- vim.keymap.set("n", "<leader>k", function()
+-- 	require("c4_cli").open()
+-- end, { desc = "Open CODESYS 4 c4-cli Menu" })
+--
+--
+--
+
+-- vim.api.nvim_create_user_command("FS", function()
+-- 	-- Lazy-load your main module only when the command runs
+-- 	require("c4_cli").FS()
+-- end, {})

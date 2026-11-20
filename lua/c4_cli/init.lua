@@ -2,15 +2,43 @@ local M = {}
 
 function M.setup(opts) end
 
+local function find_fbslib(root_dir)
+	local matches = vim.fs.find(function(name)
+		return name:match("%.fbslib$") ~= nil
+	end, {
+		path = root_dir or vim.fn.getcwd(),
+		type = "directory",
+		limit = 1,
+	})
+	return matches[1]
+end
+
+local lib_path = find_fbslib()
+if not lib_path then
+	vim.notify("No .fbslib directory found", vim.log.levels.ERROR)
+	-- return
+end
+-- vim.notify(lib_path)
+
 -- c4-cli menu/shortcuts   See https://content.helpme-codesys.com/en/CODESYS%204/_c4_commandline_c4_cli_library.html
 local actions = {
-	{ key = "b", desc = "Bootapp: Compile", cmd = "c4-cli bootapp compile" },
-	{ key = "c", desc = "Library: Save Compiled", cmd = "c4-cli library save-compiled" },
-	{ key = "p", desc = "Library: Pack Source", cmd = "c4-cli library pack" },
-	{ key = "r", desc = "Dependencies: Restore", cmd = "c4-cli library restore" },
-	{ key = "i", desc = "Dependencies: Install", cmd = "c4-cli library install" },
-	{ key = "k", desc = "Dependencies: Check", cmd = "c4-cli library check" },
-	{ key = "x", desc = "Controller: Reset", cmd = "c4-cli reset" },
+	{ key = "c", desc = "Bootapp: Compile", cmd = "c4-cli bootapp compile" },
+	{ key = "s", desc = "Library: Save Compiled", cmd = "c4-cli library save-compiled . ./build/ --overwrite -v" },
+	{
+		key = "S",
+		desc = "Library: Save Compiled with documentation",
+		cmd = "c4-cli library save-compiled . ./build/ --include-libdoc ./doc.lmd --overwrite -v",
+	},
+	-- { key = "p", desc = "Library: Pack Source", cmd = "c4-cli library pack " .. lib_path .. " ./build " },
+	{ key = "p", desc = "Library: Pack Source", cmd = "c4-cli library pack . ../build/ " },
+	-- { key = "r", desc = "Dependencies: Restore", cmd = "c4-cli library restore" },
+	{
+		key = "i",
+		desc = "Dependencies: Install",
+		cmd = "c4-cli librepo install C:\\Users\\cpbos\\AppData\\Local\\CODESYS-4\\managed-libraries --all ./build/ --overwrite",
+	},
+	-- { key = "k", desc = "Dependencies: Check", cmd = "c4-cli library check" },
+	-- { key = "x", desc = "Controller: Reset", cmd = "c4-cli reset" },
 	{ key = "l", desc = "Library: List references", cmd = "c4-cli library list" },
 	{ key = "v", desc = "Version", cmd = "c4-cli version --verbose " },
 	{ key = "a", desc = "About", cmd = "c4-cli about --verbose --help " },
